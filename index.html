@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Heart Disease Prediction</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .step.active .step-circle {
+            background: #4facfe;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3 i {
+            margin-right: 10px;
+            color: #4facfe;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #4facfe;
+        }
+
+        .range-container {
+            position: relative;
+        }
+
+        .range-value {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #4facfe;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin: 0 -30px -40px -30px;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .submit-btn i {
+            font-size: 20px;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .disclaimer strong {
+            color: #856404;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 25px 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .progress-bar {
+                padding: 15px;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .step {
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 8px 0;
+            }
+
+            .step-circle {
+                width: 35px;
+                height: 35px;
+                margin-bottom: 0;
+                margin-right: 12px;
+                font-size: 14px;
+            }
+
+            .step span {
+                font-size: 14px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .section {
+                margin-bottom: 25px;
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .section h3 {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 10px 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 8px;
+            }
+
+            .range-container {
+                position: relative;
+            }
+
+            .range-value {
+                right: 12px;
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+
+            .help-text {
+                font-size: 0.8rem;
+                margin-top: 4px;
+            }
+
+            .submit-section {
+                padding: 20px 15px;
+                margin: 0 -15px -15px -15px;
+            }
+
+            .submit-btn {
+                padding: 15px 25px;
+                font-size: 16px;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .disclaimer {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px 12px;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .progress-bar {
+                padding: 12px;
+            }
+
+            .step-circle {
+                width: 32px;
+                height: 32px;
+                font-size: 13px;
+            }
+
+            .form-container {
+                padding: 12px;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section h3 {
+                font-size: 1.1rem;
+            }
+
+            .form-row {
+                gap: 12px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 12px 15px;
+            }
+
+            .submit-btn {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+
+            .disclaimer {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .section h3 {
+                font-size: 1rem;
+            }
+
+            .form-group label {
+                font-size: 0.85rem;
+            }
+
+            .submit-btn {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heartbeat"></i> Advanced Heart Disease Prediction</h1>
+            <p>Comprehensive AI-powered cardiovascular risk assessment with personalized recommendations</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step active">
+                    <div class="step-circle">1</div>
+                    <span>Basic Info</span>
+                </div>
+                <div class="step">
+                    <div class="step-circle">2</div>
+                    <span>Medical History</span>
+                </div>
+                <div class="step">
+                    <div class="step-circle">3</div>
+                    <span>Lifestyle</span>
+                </div>
+                <div class="step">
+                    <div class="step-circle">4</div>
+                    <span>Assessment</span>
+                </div>
+            </div>
+        </div>
+
+        <form action="/predict" method="post" id="predictionForm">
+            <div class="form-container">
+                <!-- Basic Information -->
+                <div class="section">
+                    <h3><i class="fas fa-user"></i> Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age:</label>
+                            <input type="number" id="age" name="age" required min="18" max="120" placeholder="Enter your age">
+                        </div>
+                        <div class="form-group">
+                            <label for="sex">Sex:</label>
+                            <select id="sex" name="sex" required>
+                                <option value="">Select Gender</option>
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bmi">Body Mass Index (BMI):</label>
+                            <input type="number" id="bmi" name="bmi" step="0.1" min="10" max="60" placeholder="e.g., 24.5">
+                            <div class="help-text">Calculate: weight(kg) / [height(m)]²</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="family_history">Family History of Heart Disease:</label>
+                            <select id="family_history" name="family_history" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes (parents, siblings, or children)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical History -->
+                <div class="section">
+                    <h3><i class="fas fa-stethoscope"></i> Medical History</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cp">Chest Pain Type:</label>
+                            <select id="cp" name="cp" required>
+                                <option value="">Select chest pain type</option>
+                                <option value="0">Typical Angina (chest pain with exertion)</option>
+                                <option value="1">Atypical Angina (not typical chest pain)</option>
+                                <option value="2">Non-anginal Pain (not heart-related)</option>
+                                <option value="3">Asymptomatic (no chest pain)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trestbps">Resting Blood Pressure (mm Hg):</label>
+                            <input type="number" id="trestbps" name="trestbps" required min="80" max="250" placeholder="e.g., 120">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chol">Serum Cholesterol (mg/dl):</label>
+                            <input type="number" id="chol" name="chol" required min="100" max="600" placeholder="e.g., 200">
+                        </div>
+                        <div class="form-group">
+                            <label for="fbs">Fasting Blood Sugar > 120 mg/dl:</label>
+                            <select id="fbs" name="fbs" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="diabetes">Diabetes:</label>
+                            <select id="diabetes" name="diabetes" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes (Type 1 or Type 2)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hypertension">Hypertension (High Blood Pressure):</label>
+                            <select id="hypertension" name="hypertension" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lifestyle Factors -->
+                <div class="section">
+                    <h3><i class="fas fa-apple-alt"></i> Lifestyle Factors</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="smoking">Smoking Status:</label>
+                            <select id="smoking" name="smoking" required>
+                                <option value="">Select</option>
+                                <option value="0">Never smoked</option>
+                                <option value="1">Current smoker or quit within 1 year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="alcohol">Alcohol Consumption:</label>
+                            <select id="alcohol" name="alcohol" required>
+                                <option value="">Select</option>
+                                <option value="0">None or minimal</option>
+                                <option value="1">Moderate to heavy drinking</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exercise_freq">Exercise Frequency (days per week):</label>
+                            <input type="number" id="exercise_freq" name="exercise_freq" required min="0" max="7" placeholder="e.g., 3">
+                        </div>
+                        <div class="form-group">
+                            <label for="diet_score">Diet Quality Score (1-10):</label>
+                            <div class="range-container">
+                                <input type="range" id="diet_score" name="diet_score" min="1" max="10" value="5" oninput="updateRangeValue(this)">
+                                <div class="range-value" id="dietScoreValue">5</div>
+                            </div>
+                            <div class="help-text">1 = Poor diet, 10 = Excellent heart-healthy diet</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="stress_level">Stress Level (1-5):</label>
+                            <div class="range-container">
+                                <input type="range" id="stress_level" name="stress_level" min="1" max="5" value="3" oninput="updateRangeValue(this)">
+                                <div class="range-value" id="stressLevelValue">3</div>
+                            </div>
+                            <div class="help-text">1 = Very low stress, 5 = Extremely high stress</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sleep_hours">Average Sleep Hours per Night:</label>
+                            <input type="number" id="sleep_hours" name="sleep_hours" step="0.5" min="2" max="16" placeholder="e.g., 7.5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Medical Parameters -->
+                <div class="section">
+                    <h3><i class="fas fa-microscope"></i> Advanced Medical Parameters</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="restecg">Resting ECG Results:</label>
+                            <select id="restecg" name="restecg" required>
+                                <option value="">Select</option>
+                                <option value="0">Normal</option>
+                                <option value="1">ST-T Wave Abnormality</option>
+                                <option value="2">Left Ventricular Hypertrophy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="thalach">Maximum Heart Rate Achieved:</label>
+                            <input type="number" id="thalach" name="thalach" required min="60" max="220" placeholder="e.g., 150">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exang">Exercise Induced Angina:</label>
+                            <select id="exang" name="exang" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="oldpeak">ST Depression Induced by Exercise:</label>
+                            <input type="number" id="oldpeak" name="oldpeak" required min="0" max="10" step="0.1" placeholder="e.g., 1.2">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="slope">Slope of Peak Exercise ST Segment:</label>
+                            <select id="slope" name="slope" required>
+                                <option value="">Select</option>
+                                <option value="0">Upsloping</option>
+                                <option value="1">Flat</option>
+                                <option value="2">Downsloping</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ca">Number of Major Vessels Colored by Fluoroscopy:</label>
+                            <input type="number" id="ca" name="ca" required min="0" max="3" placeholder="0-3">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="thal">Thalassemia:</label>
+                            <select id="thal" name="thal" required>
+                                <option value="">Select</option>
+                                <option value="0">Normal</option>
+                                <option value="1">Fixed Defect</option>
+                                <option value="2">Reversible Defect</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="disclaimer">
+                    <strong>Medical Disclaimer:</strong> This assessment is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-brain"></i>
+                    Analyze My Heart Disease Risk
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateRangeValue(element) {
+            const valueElement = document.getElementById(element.id + 'Value');
+            if (valueElement) {
+                valueElement.textContent = element.value;
+            }
+        }
+
+        // Initialize range values
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRangeValue(document.getElementById('diet_score'));
+            updateRangeValue(document.getElementById('stress_level'));
+        });
+
+        // Form validation
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#f44336';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#4facfe';
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    </script>
+</body>
+</html>
