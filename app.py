@@ -16,6 +16,21 @@ from reportlab.lib import colors
 import io
 # Set the template folder explicitly to an absolute path
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+
+# --- DEBUGGING ---
+print(f"DEBUG: Current Working Directory: {os.getcwd()}")
+print(f"DEBUG: Script Location: {os.path.abspath(__file__)}")
+print(f"DEBUG: Expected Template Directory: {template_dir}")
+if os.path.exists(template_dir):
+    print(f"DEBUG: Template Directory Exists. Contents: {os.listdir(template_dir)}")
+else:
+    print(f"DEBUG: Template Directory DOES NOT EXIST at {template_dir}")
+    # Check if we are in a subdirectory and templates are up one level
+    parent_templates = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'templates')
+    if os.path.exists(parent_templates):
+         print(f"DEBUG: Found templates in parent: {parent_templates}. Contents: {os.listdir(parent_templates)}")
+# -----------------
+
 app = Flask(__name__, template_folder=template_dir)
 
 # Create comprehensive heart disease dataset with additional features
