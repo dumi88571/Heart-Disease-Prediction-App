@@ -14,7 +14,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
 import io
-app = Flask(__name__)
+# Set the template folder explicitly to an absolute path
+template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+app = Flask(__name__, template_folder=template_dir)
 
 # Create comprehensive heart disease dataset with additional features
 def create_sample_data():
