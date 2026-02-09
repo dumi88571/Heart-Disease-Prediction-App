@@ -16,21 +16,6 @@ from reportlab.lib import colors
 import io
 # Set the template folder explicitly to an absolute path
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-
-# --- DEBUGGING ---
-print(f"DEBUG: Current Working Directory: {os.getcwd()}")
-print(f"DEBUG: Script Location: {os.path.abspath(__file__)}")
-print(f"DEBUG: Expected Template Directory: {template_dir}")
-if os.path.exists(template_dir):
-    print(f"DEBUG: Template Directory Exists. Contents: {os.listdir(template_dir)}")
-else:
-    print(f"DEBUG: Template Directory DOES NOT EXIST at {template_dir}")
-    # Check if we are in a subdirectory and templates are up one level
-    parent_templates = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'templates')
-    if os.path.exists(parent_templates):
-         print(f"DEBUG: Found templates in parent: {parent_templates}. Contents: {os.listdir(parent_templates)}")
-# -----------------
-
 app = Flask(__name__, template_folder=template_dir)
 
 # Create comprehensive heart disease dataset with additional features
@@ -320,7 +305,29 @@ def generate_pdf_report(form_data, prediction, probability, recommendations):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        # Debug info if template fails
+        debug_info = f"<h1>Error: {str(e)}</h1>"
+        debug_info += f"<h2>Current Directory: {os.getcwd()}</h2>"
+        debug_info += "<h3>Directory Contents:</h3><ul>"
+        for item in os.listdir(os.getcwd()):
+            debug_info += f"<li>{item}</li>"
+        debug_info += "</ul>"
+        
+        template_loc = os.path.join(os.getcwd(), 'templates')
+        debug_info += f"<h3>Templates Directory ({template_loc}):</h3>"
+        if os.path.exists(template_loc):
+            debug_info += "<ul>"
+            for item in os.listdir(template_loc):
+                debug_info += f"<li>{item}</li>"
+            debug_info += "</ul>"
+        else:
+            debug_info += "<p>Templates directory NOT FOUND</p>"
+            
+        return debug_info
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
