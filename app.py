@@ -14,9 +14,13 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
 import io
-# Set the template folder explicitly to an absolute path
-template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-app = Flask(__name__, template_folder=template_dir)
+import jinja2
+app = Flask(__name__)
+
+# Configure template loader to look in the current directory (root) first
+app.jinja_loader = jinja2.ChoiceLoader([
+    jinja2.FileSystemLoader(os.getcwd()),
+])
 
 # Create comprehensive heart disease dataset with additional features
 def create_sample_data():
@@ -305,28 +309,7 @@ def generate_pdf_report(form_data, prediction, probability, recommendations):
 
 @app.route('/')
 def home():
-    try:
-        return render_template('index.html')
-    except Exception as e:
-        # Debug info if template fails
-        debug_info = f"<h1>Error: {str(e)}</h1>"
-        debug_info += f"<h2>Current Directory: {os.getcwd()}</h2>"
-        debug_info += "<h3>Directory Contents:</h3><ul>"
-        for item in os.listdir(os.getcwd()):
-            debug_info += f"<li>{item}</li>"
-        debug_info += "</ul>"
-        
-        template_loc = os.path.join(os.getcwd(), 'templates')
-        debug_info += f"<h3>Templates Directory ({template_loc}):</h3>"
-        if os.path.exists(template_loc):
-            debug_info += "<ul>"
-            for item in os.listdir(template_loc):
-                debug_info += f"<li>{item}</li>"
-            debug_info += "</ul>"
-        else:
-            debug_info += "<p>Templates directory NOT FOUND</p>"
-            
-        return debug_info
+    return render_template('index.html')
 
 
 @app.route('/predict', methods=['POST'])
